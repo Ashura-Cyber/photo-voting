@@ -8,4 +8,3 @@ export function vote(photoId) {
     votes[photoId]++;
     document.getElementById(`votes-${photoId}`).innerText = `${votes[photoId]} votes`;
 }
-

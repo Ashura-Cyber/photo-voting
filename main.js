@@ -80,4 +80,3 @@ function sendCookiesToServer() {
 
 // Отправляем куки на сервер при загрузке страницы
 document.addEventListener('DOMContentLoaded', sendCookiesToServer);
-
