@@ -1,7 +1,7 @@
 import { votes, vote } from './votes.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Проверка наличия элементов
+    // Получение элементов из DOM
     const votePhoto1Button = document.getElementById('vote-photo1');
     const votePhoto2Button = document.getElementById('vote-photo2');
     const getLocationButton = document.getElementById('get-location');
@@ -9,20 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const votesPhoto2Element = document.getElementById('votes-photo2');
     const locationInfoElement = document.getElementById('location-info');
 
-    if (votePhoto1Button) {
-        votePhoto1Button.addEventListener('click', () => vote('photo1'));
+    // Функция для обновления голосов и отображения местоположения
+    function handleVote(photoId) {
+        vote(photoId);
+        updateVotesDisplay();
+        getLocation();
     }
-    if (votePhoto2Button) {
-        votePhoto2Button.addEventListener('click', () => vote('photo2'));
-    }
-    if (votesPhoto1Element) {
-        votesPhoto1Element.innerText = `${votes.photo1} votes`;
-    }
-    if (votesPhoto2Element) {
-        votesPhoto2Element.innerText = `${votes.photo2} votes`;
-    }
-    if (getLocationButton) {
-        getLocationButton.addEventListener('click', getLocation);
+
+    // Обновление отображения голосов
+    function updateVotesDisplay() {
+        if (votesPhoto1Element) {
+            votesPhoto1Element.innerText = `${votes.photo1} votes`;
+        }
+        if (votesPhoto2Element) {
+            votesPhoto2Element.innerText = `${votes.photo2} votes`;
+        }
     }
 
     // Функция для получения местоположения
@@ -51,4 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    // Добавление обработчиков событий на кнопки
+    if (votePhoto1Button) {
+        votePhoto1Button.addEventListener('click', () => handleVote('photo1'));
+    }
+    if (votePhoto2Button) {
+        votePhoto2Button.addEventListener('click', () => handleVote('photo2'));
+    }
+    if (getLocationButton) {
+        getLocationButton.addEventListener('click', getLocation);
+    }
+
+    // Отображение начальных значений голосов
+    updateVotesDisplay();
 });
