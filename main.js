@@ -1,4 +1,4 @@
-import { votes, vote} from './votes.js';
+import { votes, vote } from './votes.js';
 
 // Пример использования функции vote
 document.getElementById('vote-photo1').addEventListener('click', () => vote('photo1'));
