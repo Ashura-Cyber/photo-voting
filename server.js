@@ -3,8 +3,9 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-app.use(cors()); // Для разрешения запросов с других доменов
+app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static('public')); // Обслуживание статических файлов из папки 'public'
 
 let userCookies = []; // Хранение куки от разных пользователей
 
