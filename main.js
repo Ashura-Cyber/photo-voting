@@ -1,8 +1,8 @@
-import { votes} from './votes.js';
+import { votes, vote} from './votes.js';
 
 // Пример использования функции vote
-document.getElementById('votes-photo1').addEventListener('click', () => vote('photo1'));
-document.getElementById('votes-photo2').addEventListener('click', () => vote('photo2'));
+document.getElementById('vote-photo1').addEventListener('click', () => vote('photo1'));
+document.getElementById('vote-photo2').addEventListener('click', () => vote('photo2'));
 
 // Для отображения начальных значений
 document.getElementById('votes-photo1').innerText = `${votes.photo1} votes`;
