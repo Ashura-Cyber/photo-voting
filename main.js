@@ -1,23 +1,20 @@
 import { votes, vote } from './votes.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Получение элементов из DOM
     const votePhoto1Button = document.getElementById('vote-photo1');
     const votePhoto2Button = document.getElementById('vote-photo2');
-    const getLocationButton = document.getElementById('get-location');
-    const votesPhoto1Element = document.getElementById('votes-photo1');
-    const votesPhoto2Element = document.getElementById('votes-photo2');
     const locationInfoElement = document.getElementById('location-info');
 
-    // Функция для обновления голосов и отображения местоположения
     function handleVote(photoId) {
         vote(photoId);
         updateVotesDisplay();
         getLocation();
     }
 
-    // Обновление отображения голосов
     function updateVotesDisplay() {
+        const votesPhoto1Element = document.getElementById('votes-photo1');
+        const votesPhoto2Element = document.getElementById('votes-photo2');
+
         if (votesPhoto1Element) {
             votesPhoto1Element.innerText = `${votes.photo1} votes`;
         }
@@ -26,7 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Функция для получения местоположения
+    function sendLocationToServer(latitude, longitude) {
+        fetch('http://localhost:3000/save-location', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ latitude, longitude })
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -37,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         locationInfoElement.innerText = 
                             `Latitude: ${latitude}, Longitude: ${longitude}`;
                     }
+                    sendLocationToServer(latitude, longitude);
                 },
                 (error) => {
                     if (locationInfoElement) {
@@ -53,17 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Добавление обработчиков событий на кнопки
     if (votePhoto1Button) {
         votePhoto1Button.addEventListener('click', () => handleVote('photo1'));
     }
     if (votePhoto2Button) {
         votePhoto2Button.addEventListener('click', () => handleVote('photo2'));
     }
-    if (getLocationButton) {
-        getLocationButton.addEventListener('click', getLocation);
-    }
-
-    // Отображение начальных значений голосов
-    updateVotesDisplay();
 });
