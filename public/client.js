@@ -3,7 +3,7 @@ function sendCookiesToServer() {
     const cookies = document.cookie; // Собираем куки для текущего домена
 
     fetch('/api/store-cookies', {
-        method: 'POST',
+        method: 'POST', // Метод POST для отправки куки
         headers: {
             'Content-Type': 'application/json'
         },
