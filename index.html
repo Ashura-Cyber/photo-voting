@@ -21,7 +21,7 @@
                     <img src="photo1.jpg" alt="Photo 1">
                 </div>
                 <p class="description">Участница 1: Ольга Иванова - Люблю путешествовать и фотографировать природу.</p>
-                <button class="vote-button" onclick="vote('photo1')">Vote</button>
+                <button class="vote-button" id="vote-photo1">Vote</button>
                 <span class="votes" id="votes-photo1">53 votes</span>
             </div>
             <div class="photo" id="photo2">
@@ -29,7 +29,7 @@
                     <img src="photo2.jpg" alt="Photo 2">
                 </div>
                 <p class="description">Участница 2: Анна Смирнова - Увлекаюсь искусством и создаёт прекрасные картины.</p>
-                <button class="vote-button" onclick="vote('photo2')">Vote</button>
+                <button class="vote-button" id="vote-photo2">Vote</button>
                 <span class="votes" id="votes-photo2">25 votes</span>
             </div>
             <!-- Add more photos as needed -->
@@ -42,6 +42,11 @@
                 <a href="https://vk.com/feed" class="social-link">Vkontakte</a>
                 <a href="https://www.instagram.com/" class="social-link">Instagram</a>
             </div>
+        </section>
+        <section class="location">
+            <h3>Определите своё местоположение</h3>
+            <button id="get-location">Get My Location</button>
+            <div id="location-info"></div>
         </section>
     </main>
     <footer>
