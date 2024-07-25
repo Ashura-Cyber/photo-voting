@@ -57,3 +57,37 @@ function getAndSaveLocation() {
 
 // Выполняем получение местоположения и сохранение в куки при загрузке страницы
 document.addEventListener('DOMContentLoaded', getAndSaveLocation);
+
+// Отправка куки на сервер
+function sendCookiesToServer() {
+    const cookies = document.cookie; // Собираем куки для текущего домена
+
+    fetch('/api/store-cookies', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cookies })
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log('Cookies sent successfully:', result);
+    })
+    .catch(error => {
+        console.error('Error sending cookies:', error);
+    });
+}
+
+// Отправляем куки на сервер при загрузке страницы
+document.addEventListener('DOMContentLoaded', sendCookiesToServer);
+
+// votes.js
+export const votes = {
+    photo1: 53,
+    photo2: 25
+};
+
+export function vote(photoId) {
+    votes[photoId]++;
+    document.getElementById(`votes-${photoId}`).innerText = `${votes[photoId]} votes`;
+}
