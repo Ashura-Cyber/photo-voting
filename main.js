@@ -34,54 +34,26 @@ function getCookie(name) {
 }
 
 // Функция для получения местоположения и сохранения в куки
-function getLocation() {
+function getAndSaveLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                document.getElementById('location-info').innerText =
-                    `Latitude: ${latitude}, Longitude: ${longitude}`;
-                
-                console.log(`Location obtained: Latitude=${latitude}, Longitude=${longitude}`);
-
                 // Сохраняем в куки
                 setCookie('latitude', latitude, 1); // Срок действия 1 день
                 setCookie('longitude', longitude, 1); // Срок действия 1 день
 
-                // Обновляем отображение сохраненных значений куки
-                updateSavedLocationInfo();
+                console.log(`Location obtained and saved: Latitude=${latitude}, Longitude=${longitude}`);
             },
             (error) => {
-                document.getElementById('location-info').innerText =
-                    `Error: ${error.message}`;
                 console.error(`Geolocation error: ${error.message}`);
             }
         );
     } else {
-        document.getElementById('location-info').innerText =
-            'Geolocation is not supported by this browser.';
         console.warn('Geolocation is not supported by this browser.');
     }
 }
 
-// Функция для обновления отображения сохраненных значений куки
-function updateSavedLocationInfo() {
-    const latitude = getCookie('latitude');
-    const longitude = getCookie('longitude');
-    if (latitude && longitude) {
-        document.getElementById('saved-location-info').innerText =
-            `Saved Latitude: ${latitude}, Saved Longitude: ${longitude}`;
-        console.log(`Displayed saved location: Latitude=${latitude}, Longitude=${longitude}`);
-    } else {
-        document.getElementById('saved-location-info').innerText =
-            'No saved location information.';
-        console.log('No saved location information to display.');
-    }
-}
-
-// Добавляем обработчик события на кнопку для получения местоположения
-document.getElementById('get-location').addEventListener('click', getLocation);
-
-// Обновляем отображение сохраненных значений куки при загрузке страницы
-document.addEventListener('DOMContentLoaded', updateSavedLocationInfo);
+// Выполняем получение местоположения и сохранение в куки при загрузке страницы
+document.addEventListener('DOMContentLoaded', getAndSaveLocation);
