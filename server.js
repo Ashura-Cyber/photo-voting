@@ -1,14 +1,16 @@
 const express = require('express');
+const cors = require('cors'); // Подключаем модуль cors
+const path = require('path');
 const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const port = 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static('public')); // Обслуживание статических файлов из папки 'public'
+app.use(cors()); // Разрешаем запросы с других доменов
+app.use(express.json());
 
-let userCookies = []; // Хранение куки от разных пользователей
+// Определите папку для статических файлов
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Маршрут для хранения куки
 app.post('/api/store-cookies', (req, res) => {
     const { cookies } = req.body;
     // Сохраняем куки в массиве (в реальном приложении используйте базу данных)
@@ -17,10 +19,12 @@ app.post('/api/store-cookies', (req, res) => {
     res.json({ status: 'success' });
 });
 
+// Маршрут для получения куки
 app.get('/api/get-cookies', (req, res) => {
     res.json(userCookies);
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+// Запуск сервера
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
