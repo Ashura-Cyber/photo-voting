@@ -13,13 +13,13 @@ function setCookie(name, value, days) {
     const d = new Date();
     d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
     let expires = "expires=" + d.toUTCString();
-    document.cookie = name + "=" + (value || "") + ";" + expires + ";path=/";
+    document.cookie = `${name}=${value || ""}; ${expires}; path=/`;
     console.log(`Cookie set: ${name}=${value}; ${expires}; path=/`);
 }
 
 // Функция для получения куки
 function getCookie(name) {
-    let nameEQ = name + "=";
+    let nameEQ = `${name}=`;
     let ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
@@ -69,14 +69,21 @@ function sendCookiesToServer() {
         },
         body: JSON.stringify({ cookies })
     })
-    .then(response => response.json())
+    .then(response => response.text()) // Сначала читаем ответ как текст
     .then(result => {
-        console.log('Cookies sent successfully:', result);
+        console.log('Response text:', result);
+        try {
+            const jsonResult = JSON.parse(result); // Попробуйте распарсить как JSON
+            console.log('Cookies sent successfully:', jsonResult);
+        } catch (e) {
+            console.error('Error parsing response JSON:', e);
+        }
     })
     .catch(error => {
         console.error('Error sending cookies:', error);
     });
 }
+
 
 // Отправляем куки на сервер при загрузке страницы
 document.addEventListener('DOMContentLoaded', sendCookiesToServer);
