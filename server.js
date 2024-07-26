@@ -9,7 +9,7 @@ app.use(bodyParser.json()); // Для обработки JSON-данных
 
 let userCookies = []; // Массив для хранения куки
 
-// Маршрут для хранения куки
+// Обработка POST-запросов для хранения куки
 app.post('/api/store-cookies', (req, res) => {
     const { cookies } = req.body;
     userCookies.push(cookies);
@@ -17,7 +17,7 @@ app.post('/api/store-cookies', (req, res) => {
     res.json({ status: 'success' });
 });
 
-// Маршрут для получения куки
+// Обработка GET-запросов для получения куки
 app.get('/api/get-cookies', (req, res) => {
     res.json(userCookies);
 });

@@ -1,4 +1,3 @@
-// client.js
 function sendCookiesToServer() {
     const cookies = document.cookie; // Собираем куки для текущего домена
 
