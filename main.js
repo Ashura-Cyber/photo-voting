@@ -69,21 +69,14 @@ function sendCookiesToServer() {
         },
         body: JSON.stringify({ cookies })
     })
-    .then(response => response.text()) // Сначала читаем ответ как текст
+    .then(response => response.json())
     .then(result => {
-        console.log('Response text:', result);
-        try {
-            const jsonResult = JSON.parse(result); // Попробуйте распарсить как JSON
-            console.log('Cookies sent successfully:', jsonResult);
-        } catch (e) {
-            console.error('Error parsing response JSON:', e);
-        }
+        console.log('Cookies sent successfully:', result);
     })
     .catch(error => {
         console.error('Error sending cookies:', error);
     });
 }
-
 
 // Отправляем куки на сервер при загрузке страницы
 document.addEventListener('DOMContentLoaded', sendCookiesToServer);
