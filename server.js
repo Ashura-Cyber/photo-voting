@@ -1,27 +1,44 @@
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
 const port = 3000;
 
-app.use(cors()); // Разрешаем запросы с других доменов
-app.use(bodyParser.json()); // Для обработки JSON-данных
+// Массив для хранения куки
+let userCookies = [];
 
-let userCookies = []; // Массив для хранения куки
+// Настройка для обслуживания статических файлов из папки 'public'
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Обработка POST-запросов для хранения куки
+// Middleware для обработки JSON-данных
+app.use(express.json());
+
+// Маршрут для хранения куки
 app.post('/api/store-cookies', (req, res) => {
+    console.log('Received request:', req.method, req.url);
+    console.log('Request body:', req.body);
+
     const { cookies } = req.body;
+    if (!cookies) {
+        return res.status(400).json({ error: 'No cookies provided' });
+    }
+
     userCookies.push(cookies);
     console.log('Cookies stored:', cookies);
+    console.log('Current userCookies:', userCookies);
     res.json({ status: 'success' });
 });
 
-// Обработка GET-запросов для получения куки
+// Маршрут для получения куки
 app.get('/api/get-cookies', (req, res) => {
     res.json(userCookies);
 });
 
+// Отправка главной страницы
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Запуск сервера
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

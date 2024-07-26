@@ -1,15 +1,19 @@
-// client.js
 function sendCookiesToServer() {
-    const cookies = document.cookie; // Собираем куки для текущего домена
+    const cookies = document.cookie;
 
     fetch('/api/store-cookies', {
-        method: 'POST', // Метод POST для отправки куки
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ cookies })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(result => {
         console.log('Cookies sent successfully:', result);
     })
@@ -18,5 +22,4 @@ function sendCookiesToServer() {
     });
 }
 
-// Отправляем куки на сервер при загрузке страницы
 document.addEventListener('DOMContentLoaded', sendCookiesToServer);

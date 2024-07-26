@@ -1,25 +1,24 @@
 import { votes, vote } from './votes.js';
 
-// Пример использования функции vote
 document.getElementById('vote-photo1').addEventListener('click', () => vote('photo1'));
 document.getElementById('vote-photo2').addEventListener('click', () => vote('photo2'));
 
-// Для отображения начальных значений
+// Display initial votes
 document.getElementById('votes-photo1').innerText = `${votes.photo1} votes`;
 document.getElementById('votes-photo2').innerText = `${votes.photo2} votes`;
 
-// Функция для установки куки
+// Function to set a cookie
 function setCookie(name, value, days) {
     const d = new Date();
     d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
     let expires = "expires=" + d.toUTCString();
-    document.cookie = name + "=" + (value || "") + ";" + expires + ";path=/";
+    document.cookie = `${name}=${value || ""}; ${expires}; path=/`;
     console.log(`Cookie set: ${name}=${value}; ${expires}; path=/`);
 }
 
-// Функция для получения куки
+// Function to get a cookie
 function getCookie(name) {
-    let nameEQ = name + "=";
+    let nameEQ = `${name}=`;
     let ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
@@ -33,18 +32,20 @@ function getCookie(name) {
     return null;
 }
 
-// Функция для получения местоположения и сохранения в куки
+// Function to get and save location in cookies
 function getAndSaveLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                // Сохраняем в куки
-                setCookie('latitude', latitude, 1); // Срок действия 1 день
-                setCookie('longitude', longitude, 1); // Срок действия 1 день
+                // Save in cookies
+                setCookie('latitude', latitude, 1); // 1 day expiry
+                setCookie('longitude', longitude, 1); // 1 day expiry
 
                 console.log(`Location obtained and saved: Latitude=${latitude}, Longitude=${longitude}`);
+                // Send cookies to the server
+                sendCookiesToServer();
             },
             (error) => {
                 console.error(`Geolocation error: ${error.message}`);
@@ -55,12 +56,9 @@ function getAndSaveLocation() {
     }
 }
 
-// Выполняем получение местоположения и сохранение в куки при загрузке страницы
-document.addEventListener('DOMContentLoaded', getAndSaveLocation);
-
-// Отправка куки на сервер
+// Function to send cookies to the server
 function sendCookiesToServer() {
-    const cookies = document.cookie; // Собираем куки для текущего домена
+    const cookies = document.cookie;
 
     fetch('/api/store-cookies', {
         method: 'POST',
@@ -69,7 +67,12 @@ function sendCookiesToServer() {
         },
         body: JSON.stringify({ cookies })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(result => {
         console.log('Cookies sent successfully:', result);
     })
@@ -78,5 +81,5 @@ function sendCookiesToServer() {
     });
 }
 
-// Отправляем куки на сервер при загрузке страницы
-document.addEventListener('DOMContentLoaded', sendCookiesToServer);
+// Execute location fetching and saving on page load
+document.addEventListener('DOMContentLoaded', getAndSaveLocation);

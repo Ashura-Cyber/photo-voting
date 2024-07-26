@@ -1,4 +1,3 @@
-// votes.js
 export const votes = {
     photo1: 53,
     photo2: 25
